@@ -25,13 +25,13 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(_onScroll);
+    scrollController.addListener(onScroll);
   }
 
-  void _onScroll() {
+  void onScroll() {
     if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
       if (!isLoadingMore && !isLoading && articles.length < maxResult) {
-        _loadMoreArticles();
+        loadMoreArticles();
       }
     }
   }
@@ -49,19 +49,22 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       isLoading = true;
       errorMsg = null;
-      articles.clear();
+      articles = [];
       currentPage = 1;
     });
 
     try {
       var response = await ApiManager.searchArticles(searchController.text, currentPage);
+      if (!mounted) return;
+
       setState(() {
-        articles = response.articles ?? [];
-        maxResult = response.totalResults?.toInt() ?? 0;
+        articles = List.from(response.articles ?? []);
+        maxResult = response.totalResults ?? 0;
         currentPage++;
         isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         errorMsg = e.toString();
         isLoading = false;
@@ -69,19 +72,22 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  void _loadMoreArticles() async {
+  void loadMoreArticles() async {
     setState(() {
       isLoadingMore = true;
     });
 
     try {
       var response = await ApiManager.searchArticles(searchController.text, currentPage);
+      if (!mounted) return;
+
       setState(() {
-        articles.addAll(response.articles ?? []);
+        articles = [...articles, ...?response.articles];
         currentPage++;
         isLoadingMore = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         isLoadingMore = false;
       });
@@ -119,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Navigator.pop(context);
                     }
                     setState(() {
-                      articles.clear();
+                      articles = [];
                       errorMsg = null;
                     });
                   },
@@ -159,7 +165,10 @@ class _SearchScreenState extends State<SearchScreen> {
             SliverList.separated(
               itemCount: articles.length,
               itemBuilder: (context, index) {
-                return ArticleWidget(article: articles[index]);
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8,left: 16,right: 16),
+                  child: ArticleWidget(article: articles[index]),
+                );
               },
               separatorBuilder: (context, index) => const SizedBox(height: 20),
             ),
