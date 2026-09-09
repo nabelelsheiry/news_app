@@ -12,4 +12,20 @@ class AppProvider extends ChangeNotifier {
     _appLocal = newLanguage;
     notifyListeners();
   }
+  String _appTheme = 'Light';
+
+  String get appTheme => _appTheme;
+
+  ThemeMode get themeMode {
+    if (_appTheme == 'Dark') {
+      return ThemeMode.dark;
+    }
+    return ThemeMode.light;
+  }
+
+  void changeTheme(String theme) {
+    if (_appTheme == theme) return;
+    _appTheme = theme;
+    notifyListeners();
+  }
 }

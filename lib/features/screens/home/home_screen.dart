@@ -4,6 +4,7 @@ import 'package:news/core/utiles/app_assets.dart';
 import 'package:news/core/widgets/drawer_widget.dart';
 import 'package:news/features/screens/home/listview_widget.dart';
 import 'package:news/l10n/app_localizations.dart';
+import 'package:news/model/category_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,33 +14,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> imagesLight=[
-    AppAssets.listview1,
-    AppAssets.listview2,
-    AppAssets.listview3,
-    AppAssets.listview4,
-    AppAssets.listview5,
-    AppAssets.listview6,
-    AppAssets.listview7,
-  ];
-  final List<String> imagesDark=[
-    AppAssets.listviewDark1,
-    AppAssets.listviewDark2,
-    AppAssets.listviewDark3,
-    AppAssets.listviewDark4,
-    AppAssets.listviewDark1,
-    AppAssets.listviewDark2,
-    AppAssets.listviewDark3,
+
+  final List<CategoryModel> categories=[
+    CategoryModel(categoryName: "General", imageLight: AppAssets.listview1, imageDark: AppAssets.listviewDark1),
+    CategoryModel(categoryName: "Business", imageLight: AppAssets.listview2, imageDark: AppAssets.listviewDark2),
+    CategoryModel(categoryName: "Sports", imageLight: AppAssets.listview3, imageDark: AppAssets.listviewDark3),
+    CategoryModel(categoryName: "Technology", imageLight: AppAssets.listview4, imageDark: AppAssets.listviewDark4),
+    CategoryModel(categoryName: "Entertainment", imageLight: AppAssets.listview5, imageDark: AppAssets.listviewDark1),
+    CategoryModel(categoryName: "Health", imageLight: AppAssets.listview6, imageDark: AppAssets.listviewDark2),
+    CategoryModel(categoryName: "Science", imageLight: AppAssets.listview7, imageDark: AppAssets.listviewDark3),
   ];
 
   @override
   Widget build(BuildContext context) {
     var locale= AppLocalizations.of(context)!;
     var theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       drawer: DrawerWidget(),
       appBar:AppBar(
-        title: Text(locale.general),
+        title: Text(locale.home),
         actions: [
           const Icon(Icons.search),
           const SizedBox(width: 16,)
@@ -53,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(locale.goodMorning,style: theme.textTheme.bodySmall,),
               Text(locale.hereIsSomeNewsForYou ,style: theme.textTheme.bodySmall,),
             const SizedBox(height: 16,),
-            Expanded(child: ListviewWidget(images: imagesLight))
+            Expanded(child: ListviewWidget(categories: categories,))
           ],
         ),
       )),

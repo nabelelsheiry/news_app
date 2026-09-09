@@ -52,7 +52,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: DropdownButtonFormField<String>(value: initTheme,
+            child: DropdownButtonFormField<String>(value: provider.appTheme,
                 dropdownColor:Colors.transparent,
                 icon: const Icon(Icons.keyboard_arrow_down,color: AppColors.white,),
                 style: AppTextStyles.white20w700,
@@ -70,11 +70,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 items: [
                   DropdownMenuItem(value: "Dark",child: Text(locale.dark,style: AppTextStyles.white20w700,),),
                   DropdownMenuItem(value: "Light",child: Text(locale.light,style: AppTextStyles.white20w700,),),
-                ], onChanged: (value){
+                ],  onChanged: (value){
                   if(value!=null){
-                    setState(() {
-                      initTheme=value;
-                    });
+                    provider.changeTheme(value);
                   }
                 }),
           ),
