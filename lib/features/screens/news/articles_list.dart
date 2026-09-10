@@ -19,8 +19,9 @@ class ArticlesList extends StatelessWidget {
             var articles = snapshot.data!;
             return buildArticlesListView(articles);
           }
+
           else{
-            return Center(child: CircularProgressIndicator(),);
+            return const SizedBox.shrink();
           }
         });
   }

@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         Locale('ar'),
       ],
 
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }
