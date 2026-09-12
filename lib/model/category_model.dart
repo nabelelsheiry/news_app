@@ -1,4 +1,3 @@
-import 'package:news/core/utiles/app_assets.dart';
 
 class CategoryModel {
   final String categoryName;

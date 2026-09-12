@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:news/core/api/api_manager.dart';
-import 'package:news/core/utiles/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news/core/utiles/app_router.dart';
 import 'package:news/core/widgets/drawer_widget.dart';
 import 'package:news/features/screens/news/articles_list.dart';
 import 'package:news/features/screens/news/news_view_model.dart';
 import 'package:news/model/category_model.dart';
 import 'package:news/model/sources_response.dart';
-import 'package:provider/provider.dart';
 
 class NewsScreen extends StatefulWidget {
   final CategoryModel categoryModel;
@@ -29,7 +27,7 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     Widget body;
     var theme = Theme.of(context);
-    return ChangeNotifierProvider(
+    return BlocProvider(
       create:  (context) => viewModel ,
       child: Scaffold(
         drawer: DrawerWidget(),
@@ -42,17 +40,17 @@ class _NewsScreenState extends State<NewsScreen> {
             }, icon: const Icon(Icons.search))
           ],
         ),
-        body: Consumer<NewsViewModel>(builder: (context, vm, child) {
-          if(viewModel.isLoading){
-            body = Center(child:  CircularProgressIndicator(
+        body: BlocBuilder<NewsViewModel, NewsState>(builder: (context, state) {
+          if(state.isLoading){
+            body = Center(child: CircularProgressIndicator(
               color: theme.primaryColor,
             ),);
           }
-          else if (viewModel.errorMsg.isNotEmpty){
-            body= Center(child: Text(viewModel.errorMsg),);
+          else if (state.errorMsg.isNotEmpty){
+            body= Center(child: Text(state.errorMsg),);
           }
           else{
-            body = buildTabbar(viewModel.source);
+            body = buildTabbar(state.source);
           }
           return body;
 
@@ -63,10 +61,13 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget buildTabbar(List<SourceDm> sources){
+
     var tabs = sources.map((e)=> Text(e.name?? "Nothing")).toList();
     var articles = sources.map((e)=> ArticlesList(sourceId: e.id!)).toList();
+    if(sources.isEmpty){
+      return const Center(child: Text("No Sources"),);
+    }
     return DefaultTabController(
-
       length: sources.length,
       child: Column(
         children: [

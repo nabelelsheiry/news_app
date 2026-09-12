@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news/core/api/api_manager.dart';
+import 'package:news/api/api_manager.dart';
 import 'package:news/core/utiles/app_assets.dart';
 import 'package:news/core/widgets/article_widget.dart';
 import 'package:news/model/articles_response.dart';

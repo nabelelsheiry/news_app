@@ -1,23 +1,23 @@
-import 'package:flutter/cupertino.dart';
-import 'package:news/core/api/api_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/data/repository/news_repository.dart';
 import 'package:news/model/sources_response.dart';
+class NewsState{
+  List<SourceDm> source ;
+  bool isLoading ;
+  String errorMsg;
+  NewsState({ this.source = const [], this.isLoading= false, this.errorMsg = ""});
+}
+class NewsViewModel extends Cubit<NewsState>{
+  NewsRepository newsRepository = NewsRepository();
+  NewsViewModel(): super(NewsState());
 
-class NewsViewModel extends ChangeNotifier{
-  List<SourceDm> source =[];
-  bool isLoading = false;
-  String errorMsg ="";
-  loadSources(String category)async{
+ void loadSources(String category)async{
        try{
-         isLoading = true;
-         notifyListeners();
-         source =  await ApiManager.loadSources(category);
-         isLoading = false;
-         notifyListeners();
-
+         emit(NewsState(isLoading: true));
+         var sources = await newsRepository.loadSources(category);
+         emit(NewsState(source: sources));
        } catch(e){
-        errorMsg = e.toString();
-        notifyListeners();
-
+        emit(NewsState(errorMsg: e.toString()));
        }
   }
 }

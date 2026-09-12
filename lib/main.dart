@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:news/core/provider/app_provider.dart';
 import 'package:news/core/theme/app_theme.dart';
+import 'package:news/data/repository/data_sources/local_data_sources/local_data_sources.dart';
 import 'package:news/features/screens/home/home_screen.dart';
-import 'package:news/features/screens/news/news_screen.dart';
-import 'package:news/features/screens/search/search_screen.dart';
-import 'package:news/features/screens/splash/splash_screen.dart';
 import 'package:news/l10n/app_localizations.dart';
-import 'package:news/model/category_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  Hive.initFlutter();
+  Hive.registerAdapter( SourceDmAdapter());
   runApp(ChangeNotifierProvider(
     create: (context) => AppProvider(),
     child: const MyApp(),
